@@ -10,9 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.bruna.domain.Cidade;
 import br.com.bruna.domain.Cliente;
+import br.com.bruna.domain.Endereco;
 import br.com.bruna.domain.dto.ClienteDTO;
+import br.com.bruna.domain.dto.ClienteNewDto;
+import br.com.bruna.domain.enums.TipoCliente;
 import br.com.bruna.repositories.ClienteRepository;
+import br.com.bruna.repositories.EnderecoRepository;
 import br.com.bruna.services.exceptions.DataIntegrityException;
 import br.com.bruna.services.exceptions.ObjectNotFoundException;
 
@@ -22,10 +27,22 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository repository;
 	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+
+	
 	public Cliente findById(Long id) {
 		Optional<Cliente> cliente = repository.findById(id);
 		return cliente.orElseThrow( () -> new ObjectNotFoundException(
 				"Objeto não encontrado. ID: " + id + ", Tipo: " + Cliente.class.getName()));
+	}
+	
+	public Cliente insert(Cliente obj) {
+		obj.setId(null);
+		obj = repository.save(obj);
+		enderecoRepository.saveAll(obj.getEnderecos());
+		return obj;
+		
 	}
 	
 	public List<Cliente> findAll() {
@@ -55,6 +72,23 @@ public class ClienteService {
 	
 	public Cliente fromDTO(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
+	}
+	
+	public Cliente fromDTO(ClienteNewDto objDto) {
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if(objDto.getTelefone2() != null) {
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		
+		if(objDto.getTelefone3() != null) {
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		
+		return cli;
 	}
 	
 	public Page<Cliente> findByPage(Integer page, Integer linesPerPage, String orderBy, String direction){
