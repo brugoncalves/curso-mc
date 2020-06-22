@@ -76,7 +76,7 @@
 				<configuration>
 					<source>11</source>
 					<target>11</target>
-					<mainClass>br.com.bruna.Application</mainClass>
+					<mainClass>br.com.bruna.CursoApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
