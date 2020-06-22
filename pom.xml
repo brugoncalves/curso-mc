@@ -82,7 +82,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>br.com.curso.mc.Application</mainClass>
+					<mainClass>br.com.bruna.Application</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
