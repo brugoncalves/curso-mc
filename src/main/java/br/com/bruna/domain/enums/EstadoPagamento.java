@@ -7,7 +7,7 @@ public enum EstadoPagamento {
 	CANCELADO(3, "Cancelado");
 	
 	int cod;
-	String descricao;
+	private String descricao;
 	
 	private EstadoPagamento(int cod, String descricao) {
 		this.cod = cod;
@@ -16,6 +16,10 @@ public enum EstadoPagamento {
 	
 	public int getCod() {
 		return cod;
+	}
+	
+	public String getDescricao() {
+		return descricao;
 	}
 	
 	public static EstadoPagamento toEnum(Integer cod) {
