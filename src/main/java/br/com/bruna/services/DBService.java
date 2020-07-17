@@ -20,6 +20,7 @@ import br.com.bruna.domain.PagamentoComCartao;
 import br.com.bruna.domain.Pedido;
 import br.com.bruna.domain.Produto;
 import br.com.bruna.domain.enums.EstadoPagamento;
+import br.com.bruna.domain.enums.Perfil;
 import br.com.bruna.domain.enums.TipoCliente;
 import br.com.bruna.repositories.CategoriaRepository;
 import br.com.bruna.repositories.CidadeRepository;
@@ -117,16 +118,24 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(cid1, cid2, cid3));
 		
-		Cliente cli1 = new Cliente(null, "Maria Brown","brunabkg2@gmail.com", "11122233344", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		Cliente cli1 = new Cliente(null, "Maria Brown","brunabkg2@gmail.com", "25765868053", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		cli1.addPerfil(Perfil.CLIENTE);
 		cli1.getTelefones().addAll(Arrays.asList("32326587", "32321498"));
+		
+		
+		Cliente cli2 = new Cliente(null, "Joseph Gray", "joanaang2@gmail.com", "62919746065", TipoCliente.PESSOAFISICA, pe.encode("abc"));
+		cli2.addPerfil(Perfil.ADMIN);
+		cli2.getTelefones().addAll(Arrays.asList("36992121"));
 		
 		Endereco end1 = new Endereco(null, "Rua Liberdade", "2020", null, "Centro", "15000320", cli1, cid1);
 		Endereco end2 = new Endereco(null, "Avenida Paulista", "5000", "Ap 23", "Bela Vista", "25000000", cli1, cid2);
+		Endereco end3 = new Endereco(null, "Avenida das Flores", "300",null, "Liberdade", "3200000", cli2, cid1);
 		
 		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
+		cli2.getEnderecos().addAll(Arrays.asList(end3));
 		
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(end1, end2));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(end1, end2, end3));
 		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
