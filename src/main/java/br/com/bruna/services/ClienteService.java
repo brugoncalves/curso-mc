@@ -16,9 +16,12 @@ import br.com.bruna.domain.Cliente;
 import br.com.bruna.domain.Endereco;
 import br.com.bruna.domain.dto.ClienteDTO;
 import br.com.bruna.domain.dto.ClienteNewDto;
+import br.com.bruna.domain.enums.Perfil;
 import br.com.bruna.domain.enums.TipoCliente;
 import br.com.bruna.repositories.ClienteRepository;
 import br.com.bruna.repositories.EnderecoRepository;
+import br.com.bruna.security.UserSs;
+import br.com.bruna.services.exceptions.AuthorizationException;
 import br.com.bruna.services.exceptions.DataIntegrityException;
 import br.com.bruna.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,13 @@ public class ClienteService {
 
 	
 	public Cliente findById(Long id) {
+		
+		UserSs user = UserService.authenticated();
+		
+		if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> cliente = repository.findById(id);
 		return cliente.orElseThrow( () -> new ObjectNotFoundException(
 				"Objeto não encontrado. ID: " + id + ", Tipo: " + Cliente.class.getName()));
